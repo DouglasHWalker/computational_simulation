@@ -1,9 +1,10 @@
-""" Parent class for agents, takes the patch it is located on as a parameter """
-from doctest import DocFileSuite
-
-
+""" 
+Parent class for agents, takes the patch it is located 
+on as a parameter 
+"""
 class Agent():
-    def __init__(self, display=-1) -> None:
+    def __init__(self, pos, display=-1) -> None:
+        self.pos = pos
         self.display = display
 
     def step(self):

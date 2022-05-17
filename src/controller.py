@@ -7,12 +7,13 @@ class Controller:
         self.current_tick = 0
 
     def run(self):
+        self.__setup()
         while self.current_tick < self.ticks:
             self.__tick()
 
     def __setup(self):
-        pass
+        self.current_tick = 0
     
     def __tick(self):
-        self.world.step()
+        self.world.worldGrid = self.world.step()
         self.current_tick += 1
