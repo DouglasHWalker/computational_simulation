@@ -10,6 +10,9 @@ class Controller:
         self.__setup()
         while self.current_tick < self.ticks:
             self.__tick()
+            self.world.displayGrid()
+            print(self.world.getPopulation())
+            print()
 
     def __setup(self):
         self.current_tick = 0

@@ -3,11 +3,11 @@ import random as rd
 from src.Agents.agent import Agent
 
 class Empty(Agent):
-    def __init__(self, pos) -> None:
-        super().__init__(pos, display='0')
+    def __init__(self) -> None:
+        super().__init__(display='0')
 
-    def step(self):
-        return super().step()
+    def step(self, temp):
+        return super().step(temp)
 
     def toString(self):
         return super().toString()

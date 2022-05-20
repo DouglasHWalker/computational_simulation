@@ -22,7 +22,7 @@ At each tick,
 "high solar luminosity":    1.4
 """
 class World:
-    def __init__(self, percentage_whites, percentage_blacks,  patches=28, luminosity=1.0, albedo=1.0, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
+    def __init__(self, percentage_whites, percentage_blacks,  patches=28, luminosity=1.0, albedo=0.4, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
         # board size
         self.patches = patches
         # settings
@@ -38,10 +38,11 @@ class World:
         self.populateWorld()
     
     def step(self):
+        copy = self.worldGrid
         for row in range(len(self.worldGrid)):
             for col in range(len(self.worldGrid[row])):
                 cell = self.worldGrid[row][col]
-                result = cell.step()
+                result = cell.step(self.albedo, self.luminosity)
 
                 if result == "seed":
                     # get random neighbour
@@ -49,12 +50,12 @@ class World:
                     if n != cell.pos: 
                         # set to same colour daisy
                         y, x = n.pos
-                        self.worldGrid[y][x] = Daisy((y,x),cell.display, cell.albedo)
+                        copy[y][x].set_agent(Daisy(cell.agent.display, cell.agent.albedo))
 
                 if result == "die":
-                    self.worldGrid[row][col] = Empty((row, col))
+                    copy[row][col].set_agent(Empty())
                     
-        return self.worldGrid
+        return copy
 
     def createWorldGrid(self):
         newWorld = []
@@ -62,7 +63,7 @@ class World:
             col = []
             for c in range(self.patches):
                 pos = (r,c)
-                patch = Patch(pos, Empty(pos))
+                patch = Patch(pos, Empty())
                 col.append(patch)
             newWorld.append(col)
         return newWorld
@@ -73,12 +74,12 @@ class World:
             while(self.worldGrid[pos[0]][pos[1]].toString() != '0'):
                 pos = self.getRandomPosition()
                 #use 1 to represent black daisies
-            self.worldGrid[pos[0]][pos[1]] = Daisy(pos, '1', self.whiteAlbedo)
+            self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('1', self.whiteAlbedo))
         for j in range(self.numWhites):
             while(self.worldGrid[pos[0]][pos[1]].toString() != '0'):
                 pos = self.getRandomPosition()
                 #use 2 to represent black daisies
-            self.worldGrid[pos[0]][pos[1]] = Daisy(pos, '2', self.blackAlbedo)
+            self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('2', self.blackAlbedo))
         return self.worldGrid
 
     def getPopulation(self):

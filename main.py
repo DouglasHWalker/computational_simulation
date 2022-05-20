@@ -5,7 +5,7 @@ from src.world import World
 
 def main():
     daisyWorld = World(0.2, 0.2, patches=5)
-    fat_controller = Controller(daisyWorld, 30)
+    fat_controller = Controller(daisyWorld, number_of_steps=18)
 
     daisyWorld.displayGrid()
     print(daisyWorld.getPopulation())
