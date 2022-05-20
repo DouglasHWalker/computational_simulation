@@ -1,11 +1,10 @@
+from audioop import avg
 from copy import deepcopy
 import random as rd
 
 from src.Agents.daisy import Daisy
 from src.Agents.empty import Empty
 from src.patch import Patch
-
-VON_NEUMAN = True
 
 """ Class represents the daisyworld holds all of the patches in the world 
 At each tick, 
@@ -39,6 +38,7 @@ class World:
     
     def step(self):
         copy = self.worldGrid
+        self.diffuse()
         for row in range(len(self.worldGrid)):
             for col in range(len(self.worldGrid[row])):
                 cell = self.worldGrid[row][col]
@@ -82,6 +82,21 @@ class World:
             self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('2', self.blackAlbedo))
         return self.worldGrid
 
+    """ Tells each patch to give equal shares of (number * 100) percent of the value of patch-variable 
+    to its eight neighboring patches. number should be between 0 and 1. Regardless of topology the sum 
+    of patch-variable will be conserved across the world. (If a patch has fewer than eight neighbors, 
+    each neighbor still gets an eighth share; the patch keeps any leftover shares.) """
+    def diffuse(self):
+        for row in self.worldGrid:
+            for cell in row:
+                neighbours = self.getNeighbours(cell.pos)
+                for n in neighbours:
+                    n.temp += ((cell.temp * 0.5) / 8)
+                    cell.temp -= ((cell.temp * 0.5) / 8)
+                if len(neighbours) < 8:
+                    cell.temp += ((cell.temp * 0.5) / 8) * (8 -len(neighbours))
+                # TODO: may need to add ((cell.temp * 0.5) / 8) to the current cell when neighbours is less than 8, doesn't affect 
+
     def getPopulation(self):
         """ Returns a tuple containing the population of daisies (white and black) """
         whitePop, blackPop = (0,0)
@@ -90,6 +105,15 @@ class World:
                 if cell.toString() == '1': whitePop += 1 
                 if cell.toString() == '2': blackPop += 1
         return (whitePop, blackPop)
+    
+    def getGlobalTemp(self):
+        """ Returns a tuple containing the population of daisies (white and black) """
+        tot_temp = 0
+        for row in self.worldGrid:
+            for cell in row:
+                tot_temp += cell.temp
+        avg_temp = tot_temp / (self.patches * self.patches)
+        return avg_temp
 
     def getLuminosity(self):
         raise NotImplementedError("NOT YET IMPLEMENTED")
@@ -109,17 +133,13 @@ class World:
 
     def getNeighbours(self, pos):
         neighbours = []
-        y, x = pos
-        if x != 0: # not on left edge
-            neighbours.append(self.worldGrid[y][x-1]) # left
-        if x != self.patches-1: # not on right edge
-            neighbours.append(self.worldGrid[y][x+1]) # right
-        if y != 0: # if not in top row
-            neighbours.append(self.worldGrid[y-1][x]) # up
-        if y != self.patches-1: # if not in bottom row
-            neighbours.append(self.worldGrid[y+1][x]) # down
-        if VON_NEUMAN:
-            pass
+        row, col = pos
+        for x, y in ((row - 1, col), (row + 1, col), (row, col - 1),
+            (row, col + 1), (row - 1, col - 1), (row - 1, col + 1),
+            (row + 1, col - 1), (row + 1, col + 1)):
+            if not (0 <= x < len(self.worldGrid) and 0 <= y < len(self.worldGrid[x])): 
+                continue
+            neighbours.append(self.worldGrid[x][y])
         return neighbours
 
     def getRandomNeighbour(self, pos):

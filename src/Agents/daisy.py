@@ -16,7 +16,7 @@ class Daisy(Agent):
     def step(self, temp):
         self.age += 1
         # threshold is a parabola with a peak of 1, it drops to 0 at temperatures of 5 degrees and 40 degrees C
-        seed_threshold = ((0.1457 * temp) - (0.0032 * (temp**2)) - 0.6443)
+        seed_threshold = ((0.1457 * temp) - (0.0032 * (pow(temp,2))) - 0.6443)
         r = rd.random()
         if self.age >= MAX_AGE: return self.die()
         elif r < seed_threshold: 

@@ -14,9 +14,7 @@ class Patch():
 
     def step(self, surface_albedo, solar_lumniosity):
         self.calc_temp(surface_albedo, solar_lumniosity)
-        if self.agent.display != 0:
-            result = self.agent.step(self.temp)
-        else: result = self.agent.step()
+        result = self.agent.step(self.temp)
         return result
 
     def calc_temp(self, surface_albedo, solar_luminosity):
@@ -26,7 +24,8 @@ class Patch():
         if absorbed_lumniosity > 0:
             local_heating = 72 * log(absorbed_lumniosity) + 80
         else: local_heating = 80
-        self.temp = ((self.temp + local_heating) / 2)
+        temp = ((self.temp + local_heating) / 2)
+        self.temp = temp
 
     def set_agent(self, agent):
         self.agent = agent

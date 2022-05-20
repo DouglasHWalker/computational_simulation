@@ -12,6 +12,7 @@ class Controller:
             self.__tick()
             self.world.displayGrid()
             print(self.world.getPopulation())
+            print(self.world.getGlobalTemp())
             print()
 
     def __setup(self):
