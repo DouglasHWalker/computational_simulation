@@ -116,7 +116,7 @@ class World:
         return avg_temp
 
     def getLuminosity(self):
-        raise NotImplementedError("NOT YET IMPLEMENTED")
+        return self.luminosity
 
     def getGlobalTemperature(self):
         raise NotImplementedError("NOT YET IMPLEMENTED")
