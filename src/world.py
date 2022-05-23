@@ -31,8 +31,8 @@ class World:
         for row in range(len(self.worldGrid)):
             for col in range(len(self.worldGrid[row])):
                 cell = self.worldGrid[row][col]
+                # infected = self.getInfectedNeighbours((cell.pos))
                 result = cell.step(self.albedo, self.luminosity)
-
                 if result == "seed":
                     # get random neighbour
                     n = self.getEmptyNeighbour((cell.pos))
@@ -138,3 +138,7 @@ class World:
             if n.toString() == '0': return n
             neighbours.remove(n)
         return pos
+
+    def getInfectedNeighbours(self, pos):
+        neighbours = self.getNeighbours(pos)
+        return 1
