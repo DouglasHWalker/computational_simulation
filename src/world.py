@@ -80,11 +80,11 @@ class World:
             for cell in row:
                 neighbours = self.getNeighbours(cell.pos)
                 for n in neighbours:
-                    n.temp += ((cell.temp * 0.5) / 8)
-                    cell.temp -= ((cell.temp * 0.5) / 8)
+                    delta = ((cell.temp * (0.5)))
+                    n.temp += delta
+                    cell.temp -= delta
                 if len(neighbours) < 8:
-                    cell.temp += ((cell.temp * 0.5) / 8) * (8 -len(neighbours))
-                # TODO: may need to add ((cell.temp * 0.5) / 8) to the current cell when neighbours is less than 8, doesn't affect 
+                    cell.temp += delta * (8 -len(neighbours))
 
     def getPopulation(self):
         """ Returns a tuple containing the population of daisies (white and black) """
