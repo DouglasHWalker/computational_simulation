@@ -1,7 +1,6 @@
 import random as rd
 
 from src.Agents.agent import Agent
-from src.Agents.empty import Empty
 
 MAX_AGE = 25
 

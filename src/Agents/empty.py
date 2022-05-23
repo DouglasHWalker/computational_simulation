@@ -1,4 +1,3 @@
-import random as rd
 
 from src.Agents.agent import Agent
 

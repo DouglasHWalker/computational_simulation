@@ -1,5 +1,3 @@
-from audioop import avg
-from copy import deepcopy
 import random as rd
 
 from src.Agents.daisy import Daisy
@@ -11,14 +9,6 @@ At each tick,
     the model is updated based on the temperature of each of the patches and the survivability of the daisies on the patches. 
     As the model progresses, the survivability of each daisy is checked based on the current conditions of the model.
     If the patch is empty, and the temperature of the patch is in the spawning range, a new daisy is spawned on the patch. The colour of the new daisy has the probability of being the same colour as its neighbours.
-
-     set max-age 25
-  set global-temperature 0
-
-"ramp-up-ramp-down":        0.8
-"low solar luminosity":     0.6
-"our solar luminosity:      1.0 
-"high solar luminosity":    1.4
 """
 class World:
     def __init__(self, percentage_whites, percentage_blacks,  patches=28, luminosity=1.0, albedo=0.4, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
@@ -38,7 +28,6 @@ class World:
     
     def step(self):
         copy = self.worldGrid
-        self.diffuse()
         for row in range(len(self.worldGrid)):
             for col in range(len(self.worldGrid[row])):
                 cell = self.worldGrid[row][col]
@@ -54,7 +43,7 @@ class World:
 
                 if result == "die":
                     copy[row][col].set_agent(Empty())
-                    
+        self.worldGrid = copy
         return copy
 
     def createWorldGrid(self):
@@ -104,9 +93,9 @@ class World:
             for cell in row:
                 if cell.toString() == '1': whitePop += 1 
                 if cell.toString() == '2': blackPop += 1
-        return (whitePop, blackPop)
+        return (whitePop + blackPop, whitePop, blackPop)
     
-    def getGlobalTemp(self):
+    def getGlobalTemperature(self):
         """ Returns a tuple containing the population of daisies (white and black) """
         tot_temp = 0
         for row in self.worldGrid:
@@ -116,9 +105,6 @@ class World:
         return avg_temp
 
     def getLuminosity(self):
-        raise NotImplementedError("NOT YET IMPLEMENTED")
-
-    def getGlobalTemperature(self):
         raise NotImplementedError("NOT YET IMPLEMENTED")
 
     def getRandomPosition(self):
