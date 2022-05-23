@@ -1,30 +1,41 @@
 import csv
 
 class Controller:
-
-    def __init__(self, world, number_of_steps):
+    def __init__(self, world, lifespan):
         self.world = world
-        self.ticks = number_of_steps
+        self.lifespan = lifespan
 
         self.current_tick = 0
 
-    def run(self):
+    def go(self):
         self.__setup()
-        fields = ['Tick', 'White Daisies', 'Black Daisies', 'Global Temperature', 'Luminosity']
+        fields = ['Tick', 'Total Population', 'White Daisies', 'Black Daisies', 'Global Temperature', 'Luminosity']
         fileName = "daisyWorldOutput.csv"
         with open(fileName, 'w') as csvfile:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(fields)
-            while self.current_tick < self.ticks:
+            while self.current_tick < self.lifespan:
+                self.world.diffuse()
                 self.__tick()
-                self.world.displayGrid()
-                print(self.world.getPopulation()[0])
-                print(self.world.getGlobalTemp())
-                print(self.world.getLuminosity())
-                print(self.current_tick)
-                row = [self.current_tick, self.world.getPopulation()[0], self.world.getPopulation()[1], self.world.getGlobalTemp(), self.world.getLuminosity()]
+                self.toString()
+                row = [self.current_tick, self.world.getPopulation()[0], self.world.getPopulation()[1], self.world.getPopulation()[2], self.world.getGlobalTemperature(), self.world.getLuminosity()]
                 csvwriter.writerow(row)
-                print()
+
+                if self.extinct():break
+
+    def extinct(self):
+        is_extinct = self.world.getPopulation()[0] == 0
+        if is_extinct:
+            print("------EXTINCTION------")
+            print()
+        return is_extinct
+
+    def toString(self):
+        self.world.displayGrid()
+        print(self.world.getPopulation())
+        print(self.world.getGlobalTemperature())
+        print(self.current_tick)
+        print()
 
     def __setup(self):
         self.current_tick = 0
