@@ -79,12 +79,15 @@ class World:
         for row in self.worldGrid:
             for cell in row:
                 neighbours = self.getNeighbours(cell.pos)
-                for n in neighbours:
-                    delta = ((cell.temp * (0.5)))
+                delta = ((cell.temp * (0.5))) / 8
+                while neighbours:
+                    n = rd.choice(neighbours)
                     n.temp += delta
                     cell.temp -= delta
-                if len(neighbours) < 8:
-                    cell.temp += delta * (8 -len(neighbours))
+                    neighbours.remove(n)
+                # cell.temp = cell.temp * 0.5
+                # if len(neighbours) < 8:
+                #     cell.temp += delta * (8 -len(neighbours))
 
     def getPopulation(self):
         """ Returns a tuple containing the population of daisies (white and black) """
