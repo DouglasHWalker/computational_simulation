@@ -79,9 +79,9 @@ class World:
         for row in self.worldGrid:
             for cell in row:
                 neighbours = self.getNeighbours(cell.pos)
-                delta = ((cell.temp * (0.5))) / 8
                 while neighbours:
                     n = rd.choice(neighbours)
+                    delta = ((cell.temp * (0.5))) 
                     n.temp += delta
                     cell.temp -= delta
                     neighbours.remove(n)
