@@ -2,24 +2,31 @@ import random as rd
 
 from src.Agents.agent import Agent
 
-MAX_AGE = 25
-INIT_INFECT = 0.3
-INFECT = 0.5
-RECOVER = 0.7
-KILL = 0.1
-LOOSE_IMMUNITY = 0.3
+# we wanted to replicate disease in humans
+MAX_AGE = 25 # average human age
+INIT_INFECT = 0.01
+
+# spanish flu
+RECOVER = 0.2 # develop immunity after 4 steps
+INFECT = ((1/8) * 6)  / (1/RECOVER) # R0 of 6
+KILL = 0.1  / (1/RECOVER) # 10% of infected get killed
+LOOSE_IMMUNITY = 0.05 # once you have it you mostly immune
+
 
 """ Represents a daisy, white is represented by integer 1 and black's 2 """
 class Daisy(Agent):
 
-    def __init__(self, colour, albedo) -> None:
+    def __init__(self, colour, albedo, infected=0) -> None:
         super().__init__(str(colour))
         self.age = Daisy.getRandAge(self)
         self.albedo = albedo # fraction (0-1) of energy absorbed as heat from sunlight
-        if rd.random() < INIT_INFECT:
-            self.infected = 1
-        else: 
-            self.infected = 0
+        self.infected = infected
+
+        if self.infected != 2: # if immunity not passed on
+            if rd.random() < INIT_INFECT:
+                self.infected = 1
+            else: 
+                self.infected = 0
 
     def step(self, temp, infected):
         self.age += 1

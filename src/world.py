@@ -40,7 +40,7 @@ class World:
                     if n != cell.pos: 
                         # set to same colour daisy
                         y, x = n.pos
-                        copy[y][x].set_agent(Daisy(cell.agent.display, cell.agent.albedo))
+                        copy[y][x].set_agent(Daisy(cell.agent.display, cell.agent.albedo, cell.agent.infected))
 
                 if result == "age" or result == "disease":
                     copy[row][col].set_agent(Empty())
