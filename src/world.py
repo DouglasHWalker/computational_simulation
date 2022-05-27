@@ -6,12 +6,24 @@ from src.patch import Patch
 
 """ Class represents the daisyworld holds all of the patches in the world 
 At each tick, 
-    the model is updated based on the temperature of each of the patches and the survivability of the daisies on the patches. 
-    As the model progresses, the survivability of each daisy is checked based on the current conditions of the model.
-    If the patch is empty, and the temperature of the patch is in the spawning range, a new daisy is spawned on the patch. The colour of the new daisy has the probability of being the same colour as its neighbours.
+    the model is updated based on the temperature of each of the patches and 
+    the survivability of the daisies on the patches. 
+    As the model progresses, the survivability of each daisy is checked based 
+    on the current conditions of the model.
+    If the patch is empty, and the temperature of the patch is in the spawning 
+    range, a new daisy is spawned on the patch. 
+    The colour of the new daisy has the probability of being the same colour 
+    as its neighbours.
+
+percentage_whites, percentage_blacks: the percentage of initial daisies
+patches=28: the size of the world 28x28 default
+luminosity=1.0: the solar luminosity of the world
+albedo=0.4: the surface_albedo, the mount of temp absorbed by the surface
+whiteAlbedo=0.75, blackAlbedo=0.25: the amount of temp absorbed by the daisies
 """
 class World:
-    def __init__(self, percentage_whites, percentage_blacks,  patches=28, luminosity=1.0, albedo=0.4, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
+    def __init__(self, percentage_whites, percentage_blacks,  patches=28, 
+    luminosity=1.0, albedo=0.4, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
         # board size
         self.patches = patches
         # settings
@@ -157,6 +169,7 @@ class World:
     """
         Return all of a position Moore neighbours. 
         Returns up to 8 nieghbours if not on an edge
+        pos: the position from which the nigbours should be identified
     """
     def getNeighbours(self, pos):
         neighbours = []
@@ -169,11 +182,17 @@ class World:
             neighbours.append(self.worldGrid[x][y])
         return neighbours
 
-    """Returns a random Moore neghbour"""
+    """
+        Returns a random Moore neghbour
+        pos: the position from which the nigbours should be identified
+    """
     def getRandomNeighbour(self, pos):
         return rd.choice(self.getNeighbours(pos))
     
-    """Returns a random empty neighbour if one exists, otherwiase returns the original position"""
+    """
+        Returns a random empty neighbour if one exists, otherwiase returns the original position
+        pos: the position from which the nigbours should be identified
+    """
     def getEmptyNeighbour(self, pos):
         neighbours = self.getNeighbours(pos)
         while neighbours:

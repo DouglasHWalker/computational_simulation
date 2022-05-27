@@ -12,8 +12,11 @@ class Patch():
         self.temp = temp
 
     """
-    Execute one step in the daisyworld. Calculate the temperature and execute a step of the agent
+    Execute one step in the daisyworld. Calculate the temperature 
+    and execute a step of the agent
     returns the result of agents step
+    surface albedo: the albedo of the surface patch
+    solar_luminosity: the luminosity of the planet
     """
     def step(self, surface_albedo, solar_lumniosity):
         self.calc_temp(surface_albedo, solar_lumniosity)
@@ -22,7 +25,10 @@ class Patch():
 
     """
     Calculated the temperature of the patch based on the:
-    surface albedo of daisyworld, the solar luminosity and any absored albedo from an agent on the patch
+    surface albedo of daisyworld, the solar luminosity and any absored
+    albedo from an agent on the patch
+    surface albedo: the albedo of the surface patch
+    solar_luminosity: the luminosity of the planet
     """
     def calc_temp(self, surface_albedo, solar_luminosity):
         # absorbed luminosity
@@ -33,7 +39,7 @@ class Patch():
         if absorbed_lumniosity > 0:
             local_heating = 72 * log(absorbed_lumniosity) + 80
         else: local_heating = 80
-        
+        # final temperature
         temp = ((self.temp + local_heating) / 2)
         self.temp = temp
 

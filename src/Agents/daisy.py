@@ -6,6 +6,9 @@ MAX_AGE = 25
 
 """ 
     Represents a daisy, white is represented by integer 1 and black's 2 
+    A dasiy is either susceptible 0, infected, 1 or recovered 2
+    colour: the colour of the daisy
+    albedo: the albedo absorbed by the daisy (between 0 and 1)
 """
 class Daisy(Agent):
     def __init__(self, colour, albedo) -> None:
@@ -17,6 +20,7 @@ class Daisy(Agent):
         Performs a step for the daisy. 
         calculates the seed threshold which determines whether an empty nieghbour is seeded
         determines if an daisy has reached the end of its life
+        temp: the current temperature of the patch
     """
     def step(self, temp):
         self.age += 1

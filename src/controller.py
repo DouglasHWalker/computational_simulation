@@ -1,7 +1,8 @@
 import csv
 
 """
-The controller class handles the communication between the user (main) file and the daisyworld.
+The controller class handles the communication between the 
+user (main file) and the daisyworld.
 """
 class Controller:
     def __init__(self, world, lifespan):
@@ -14,16 +15,22 @@ class Controller:
     """
     def go(self):
         self.__setup()
-        fields = ['Tick', 'Total Population', 'White Daisies', 'Black Daisies', 'Global Temperature', 'Luminosity']
+        fields = ['Tick', 'Total Population', 'White Daisies', 'Black Daisies',
+         'Global Temperature', 'Luminosity']
         fileName = "daisyWorldOutput.csv"
         with open(fileName, 'w') as csvfile:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(fields)
             while self.current_tick < self.lifespan:
-                row = [self.current_tick, self.world.getPopulation()[0], self.world.getPopulation()[1], self.world.getPopulation()[2], self.world.getGlobalTemperature(), self.world.getLuminosity()]
+                # get parameters
+                row = [self.current_tick, self.world.getPopulation()[0], 
+                self.world.getPopulation()[1], self.world.getPopulation()[2], 
+                self.world.getGlobalTemperature(), self.world.getLuminosity()]
                 csvwriter.writerow(row)
+                # perform tick
                 self.__tick()
                 self.world.diffuse()
+                # write to terminal
                 self.toString()
 
                 if self.extinct():break
