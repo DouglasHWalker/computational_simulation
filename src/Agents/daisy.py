@@ -16,9 +16,11 @@ LOOSE_IMMUNITY = 0.01 # once you have it you mostly immune
 """ 
     Represents a daisy, white is represented by integer 1 and black's 2 
     A dasiy is either susceptible 0, infected, 1 or recovered 2
+    colour: the colour of the daisy
+    albedo: the albedo absorbed by the daisy (between 0 and 1)
+    infected: a parameter to assess whether the daisy starts it life  susceptible 0, infected, 1 or immune 2
 """
 class Daisy(Agent):
-
     def __init__(self, colour, albedo, age=0, infected=0) -> None:
         super().__init__(str(colour))
         self.age = age
@@ -38,6 +40,8 @@ class Daisy(Agent):
         Checks the infection results either: infected, recover, die, loose immunity
         calculates the seed threshold which determines whether an empty nieghbour is seeded
         determines if an daisy has reached the end of its life
+        temp: the current temperature of the patch
+        infected: either 0 or 1, represented whether an neighbour is present
     """
     def step(self, temp, infected):
         self.age += 1
@@ -57,7 +61,8 @@ class Daisy(Agent):
                 self.infected = 0
         # print(self.infected)
         r2 = rd.random()
-        if self.age >= MAX_AGE: return self.die("age")
+        if self.age >= MAX_AGE: 
+            return self.die("age")
         elif r2 < seed_threshold: 
             return self.seed()
         else: return super().step(temp, infected)
@@ -70,7 +75,7 @@ class Daisy(Agent):
     def seed(self):
         return "seed"
 
-    """Return the result of a death"""
+    """Return the result of a death, cause: the cause wither age or disease"""
     def die(self, cause):
         return cause
 

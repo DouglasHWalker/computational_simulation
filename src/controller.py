@@ -14,22 +14,28 @@ class Controller:
     """
     def go(self):
         self.__setup()
-        fields = ['Tick', 'Total Population', 'White Daisies', 'Black Daisies', 'Global Temperature', 'Luminosity', 'Susceptible', 'Infected', 'Recovered', 'Killed by Disease']
+        fields = ['Tick', 'Total Population', 'White Daisies', 'Black Daisies', 
+        'Global Temperature', 'Luminosity', 'Susceptible', 'Infected', 'Recovered', 'Killed by Disease']
         fileName = "daisyWorldOutput.csv"
+        # write to file
         with open(fileName, 'w') as csvfile:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(fields)
             while self.current_tick < self.lifespan:
                 self.world.diffuse()
+                # get parameters
                 population = self.world.getPopulation()
                 infection = self.world.getSIR()
-                row = [self.current_tick, population[0], population[1], population[2], 
-                self.world.getGlobalTemperature(), self.world.getLuminosity(), 
-                infection[0], infection[1], infection[2], infection[3]]
-                csvwriter.writerow(row)
-                self.__tick()
-                self.toString()
 
+                row = [self.current_tick, population[0], population[1], population[2], 
+                    self.world.getGlobalTemperature(), self.world.getLuminosity(), 
+                    infection[0], infection[1], infection[2], infection[3]]
+                csvwriter.writerow(row)
+                # perform tick
+                self.__tick()
+                # write to terminal
+                self.toString()
+                # check for extinction
                 if self.extinct():break
 
     """

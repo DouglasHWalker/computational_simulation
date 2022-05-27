@@ -1,7 +1,11 @@
 
 from src.Agents.agent import Agent
 
-"""Represents an empty agent, This agent does not perform any action"""
+"""
+    Represents an empty agent, This agent does not perform any action
+    display: the string representing the type of agent. 
+    display is Uused to display the agent in the world grid amd test equality
+"""
 class Empty(Agent):
     def __init__(self) -> None:
         super().__init__(display='0')
