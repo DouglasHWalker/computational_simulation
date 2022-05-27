@@ -6,7 +6,7 @@ class Agent():
     def __init__(self, display=-1) -> None:
         self.display = display
 
-    def step(self, temp):
+    def step(self, temp, infected):
         return self
 
     def toString(self):

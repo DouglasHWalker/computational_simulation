@@ -11,9 +11,9 @@ class Patch():
         self.agent = agent
         self.temp = temp
 
-    def step(self, surface_albedo, solar_lumniosity):
+    def step(self, surface_albedo, solar_lumniosity, infected):
         self.calc_temp(surface_albedo, solar_lumniosity)
-        result = self.agent.step(self.temp)
+        result = self.agent.step(self.temp, infected)
         return result
 
     def calc_temp(self, surface_albedo, solar_luminosity):

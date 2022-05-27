@@ -32,8 +32,8 @@ class World:
         for row in range(len(self.worldGrid)):
             for col in range(len(self.worldGrid[row])):
                 cell = self.worldGrid[row][col]
-                # infected = self.getInfectedNeighbours((cell.pos))
-                result = cell.step(self.albedo, self.luminosity)
+                infected = self.getInfectedNeighbours((cell.pos))
+                result = cell.step(self.albedo, self.luminosity, infected)
                 if result == "seed":
                     # get random neighbour
                     n = self.getEmptyNeighbour((cell.pos))
@@ -180,4 +180,8 @@ class World:
 
     def getInfectedNeighbours(self, pos):
         neighbours = self.getNeighbours(pos)
-        return 1
+        for neighbour in neighbours:
+            if neighbour.agent.toString() == '1' or neighbour.agent.toString() == '2':
+                if neighbour.agent.getInfectionStatus() == 1:
+                    return 1
+        return 0
