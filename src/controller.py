@@ -1,12 +1,17 @@
 import csv
 
+"""
+The controller class handles the communication between the user (main) file and the daisyworld.
+"""
 class Controller:
     def __init__(self, world, lifespan):
         self.world = world
         self.lifespan = lifespan
 
         self.current_tick = 0
-
+    """
+    Run the daisyworld, executing steps from 0 to the given lifespan of the world
+    """
     def go(self):
         self.__setup()
         fields = ['Tick', 'Total Population', 'White Daisies', 'Black Daisies', 'Global Temperature', 'Luminosity']
@@ -22,7 +27,9 @@ class Controller:
                 self.toString()
 
                 if self.extinct():break
-
+    """
+    Checks whether the daisyworld has become extinct (zero daisy population)
+    """
     def extinct(self):
         is_extinct = self.world.getPopulation()[0] == 0
         if is_extinct:
@@ -30,6 +37,9 @@ class Controller:
             print()
         return is_extinct
 
+    """
+    Output the daisyworld to the terminal
+    """
     def toString(self):
         self.world.displayGrid()
         print(self.world.getPopulation())
@@ -37,12 +47,21 @@ class Controller:
         print(self.current_tick)
         print()
 
+    """
+    Reset the daisyworld so that no ticks have occured and there is no disease
+    """
     def __setup(self):
         self.current_tick = 0
     
+    """
+    Execute one step in the daisyworld, update the current tick counter
+    """
     def __tick(self):
         self.world.worldGrid = self.world.step()
         self.current_tick += 1
-
+        
+    """
+    Gets the current tick count
+    """
     def getTick(self):
         return self.current_tick

@@ -26,6 +26,10 @@ class World:
         self.worldGrid = self.createWorldGrid()
         self.populateWorld()
     
+    """
+    Execute a step on every patch of the daisy world.
+    Update daisyworld values based on the results of p[erforming the steps
+    """
     def step(self):
         copy = self.worldGrid
         for row in range(len(self.worldGrid)):
@@ -46,6 +50,9 @@ class World:
         self.worldGrid = copy
         return copy
 
+    """
+    Initialise the world grid hollding the pathces of the world. Initially all empty
+    """
     def createWorldGrid(self):
         newWorld = []
         for r in range(self.patches):
@@ -57,6 +64,9 @@ class World:
             newWorld.append(col)
         return newWorld
 
+    """
+    Based on the chosen values, poopulate the world with agents (daisies).
+    """
     def populateWorld(self):
         pos = self.getRandomPosition()
         for i in range(self.numBlacks):
@@ -84,11 +94,11 @@ class World:
 
                 # take 1 8th of 50% from each neighbour
                 # get rid of 1 8th of 50% of own temp for each neighbour
-                oldval = gridcopy[cell.pos[0]][cell.pos[1]].temp
-                for n in neighbours:
-                    old_n_val = gridcopy[n.pos[0]][n.pos[1]].temp
-                    cell.temp += (old_n_val * 0.5) / 8
-                cell.temp -= (oldval * 0.5)
+                # oldval = gridcopy[cell.pos[0]][cell.pos[1]].temp
+                # for n in neighbours:
+                #     old_n_val = gridcopy[n.pos[0]][n.pos[1]].temp
+                #     cell.temp += (old_n_val * 0.5) / 8
+                # cell.temp -= (oldval * 0.5)
 
 
                 # from the source code, still doesn't work...
@@ -101,18 +111,18 @@ class World:
                 # if len(neighbours) < 8:
                 #     cell.temp += (0.5 * (sum / 8 - oldval)) * (8 -len(neighbours))
 
-                # while neighbours:
-                #     n = rd.choice(neighbours)
-                #     delta = ((cell.temp * (0.5)))
-                #     n.temp += delta
-                #     cell.temp -= delta
-                #     neighbours.remove(n)
-                # if len(neighbours) < 8:
-                #     cell.temp += delta * (8 -len(neighbours))
+                while neighbours:
+                    n = rd.choice(neighbours)
+                    delta = ((cell.temp * (0.5)))
+                    n.temp += delta
+                    cell.temp -= delta
+                    neighbours.remove(n)
+                if len(neighbours) < 8:
+                    cell.temp += delta * (8 -len(neighbours))
         # self.worldGrid = gridcopy
 
+    """ Returns a tuple containing the population of daisies (white and black) """
     def getPopulation(self):
-        """ Returns a tuple containing the population of daisies (white and black) """
         whitePop, blackPop = (0,0)
         for row in self.worldGrid:
             for cell in row:
@@ -120,8 +130,8 @@ class World:
                 if cell.toString() == '2': blackPop += 1
         return (whitePop + blackPop, whitePop, blackPop)
     
+    """ Returns a tuple containing the population of daisies (white and black) """
     def getGlobalTemperature(self):
-        """ Returns a tuple containing the population of daisies (white and black) """
         tot_temp = 0
         for row in self.worldGrid:
             for cell in row:
@@ -129,19 +139,25 @@ class World:
         avg_temp = tot_temp / (self.patches * self.patches)
         return avg_temp
 
+    """return the solar luminosity of the world"""
     def getLuminosity(self):
         return self.luminosity
 
+    """get a random posiiton in the world grid"""
     def getRandomPosition(self):
         x = rd.randint(0, self.patches -1)
         y = rd.randint(0, self.patches -1)
         return (x, y)
 
+    """ Prints the current state of the world grid to the terminal """
     def displayGrid(self):
-        """ Prints the current state of the world grid to the terminal """
         for row in self.worldGrid:
             print([cell.toString() for cell in row])
 
+    """
+        Return all of a position Moore neighbours. 
+        Returns up to 8 nieghbours if not on an edge
+    """
     def getNeighbours(self, pos):
         neighbours = []
         row, col = pos
@@ -153,9 +169,11 @@ class World:
             neighbours.append(self.worldGrid[x][y])
         return neighbours
 
+    """Returns a random Moore neghbour"""
     def getRandomNeighbour(self, pos):
         return rd.choice(self.getNeighbours(pos))
     
+    """Returns a random empty neighbour if one exists, otherwiase returns the original position"""
     def getEmptyNeighbour(self, pos):
         neighbours = self.getNeighbours(pos)
         while neighbours:
