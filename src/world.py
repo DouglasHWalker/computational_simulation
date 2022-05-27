@@ -1,6 +1,6 @@
 import random as rd
 
-from src.Agents.daisy import Daisy
+from src.Agents.daisy import MAX_AGE, Daisy
 from src.Agents.empty import Empty
 from src.patch import Patch
 
@@ -27,6 +27,10 @@ class World:
         self.worldGrid = self.createWorldGrid()
         self.populateWorld()
     
+    """
+    Execute a step on every patch of the daisy world.
+    Update daisyworld values based on the results of p[erforming the steps
+    """
     def step(self):
         copy = self.worldGrid
         for row in range(len(self.worldGrid)):
@@ -40,7 +44,7 @@ class World:
                     if n != cell.pos: 
                         # set to same colour daisy
                         y, x = n.pos
-                        copy[y][x].set_agent(Daisy(cell.agent.display, cell.agent.albedo, cell.agent.infected))
+                        copy[y][x].set_agent(Daisy(cell.agent.display, cell.agent.albedo, infected=cell.agent.infected))
 
                 if result == "age" or result == "disease":
                     copy[row][col].set_agent(Empty())
@@ -49,6 +53,9 @@ class World:
         self.worldGrid = copy
         return copy
 
+    """
+    Initialist the world grid hollding the pathces of the world. Initially all empty
+    """
     def createWorldGrid(self):
         newWorld = []
         for r in range(self.patches):
@@ -60,24 +67,31 @@ class World:
             newWorld.append(col)
         return newWorld
 
+    """
+    Based on the chosen values, poopulate the world with agents (daisies).
+    """
     def populateWorld(self):
         pos = self.getRandomPosition()
         for i in range(self.numBlacks):
             while(self.worldGrid[pos[0]][pos[1]].toString() != '0'):
                 pos = self.getRandomPosition()
                 #use 1 to represent black daisies
-            self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('1', self.whiteAlbedo))
+            age = rd.randint(1, MAX_AGE)
+            self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('1', self.whiteAlbedo, age=age))
         for j in range(self.numWhites):
             while(self.worldGrid[pos[0]][pos[1]].toString() != '0'):
                 pos = self.getRandomPosition()
                 #use 2 to represent black daisies
-            self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('2', self.blackAlbedo))
+            age = rd.randint(1, MAX_AGE)
+            self.worldGrid[pos[0]][pos[1]].set_agent(Daisy('2', self.blackAlbedo, age=age))
         return self.worldGrid
 
-    """ Tells each patch to give equal shares of (number * 100) percent of the value of patch-variable 
+    """ 
+    Tells each patch to give equal shares of (number * 100) percent of the value of patch-variable 
     to its eight neighboring patches. number should be between 0 and 1. Regardless of topology the sum 
     of patch-variable will be conserved across the world. (If a patch has fewer than eight neighbors, 
-    each neighbor still gets an eighth share; the patch keeps any leftover shares.) """
+    each neighbor still gets an eighth share; the patch keeps any leftover shares.) 
+    """
     def diffuse(self):
         gridcopy = self.worldGrid
         neighbourcopy = self.worldGrid
@@ -115,8 +129,8 @@ class World:
                     cell.temp += delta * (8 -len(neighbours))
         # self.worldGrid = gridcopy
 
+    """ Returns a tuple containing the population of daisies (white and black) """
     def getPopulation(self):
-        """ Returns a tuple containing the population of daisies (white and black) """
         whitePop, blackPop = (0,0)
         for row in self.worldGrid:
             for cell in row:
@@ -124,8 +138,8 @@ class World:
                 if cell.toString() == '2': blackPop += 1
         return (whitePop + blackPop, whitePop, blackPop)
     
+    """ Returns a tuple containing the population of daisies (white and black) """
     def getGlobalTemperature(self):
-        """ Returns a tuple containing the population of daisies (white and black) """
         tot_temp = 0
         for row in self.worldGrid:
             for cell in row:
@@ -133,9 +147,11 @@ class World:
         avg_temp = tot_temp / (self.patches * self.patches)
         return avg_temp
 
+    """return the solar luminosity of the world"""
     def getLuminosity(self):
         return self.luminosity
     
+    """Return the number of susceptible, infected and recovered daisies"""
     def getSIR(self):
         susceptible, infected, recovered = (0,0,0)
         for row in self.worldGrid:
@@ -146,16 +162,21 @@ class World:
                     if cell.agent.infected == 2: recovered += 1
         return (susceptible, infected, recovered, self.killed_by_disease)
 
+    """get a random posiiton in the world grid"""
     def getRandomPosition(self):
         x = rd.randint(0, self.patches -1)
         y = rd.randint(0, self.patches -1)
         return (x, y)
 
+    """ Prints the current state of the world grid to the terminal """
     def displayGrid(self):
-        """ Prints the current state of the world grid to the terminal """
         for row in self.worldGrid:
             print([cell.toString() for cell in row])
 
+    """
+        Return all of a position Moore neighbours. 
+        Returns up to 8 nieghbours if not on an edge
+    """
     def getNeighbours(self, pos):
         neighbours = []
         row, col = pos
@@ -167,9 +188,11 @@ class World:
             neighbours.append(self.worldGrid[x][y])
         return neighbours
 
+    """Returns a random Moore neghbour"""
     def getRandomNeighbour(self, pos):
         return rd.choice(self.getNeighbours(pos))
     
+    """Returns a random empty neighbour if one exists, otherwiase returns the original position"""
     def getEmptyNeighbour(self, pos):
         neighbours = self.getNeighbours(pos)
         while neighbours:
@@ -178,6 +201,7 @@ class World:
             neighbours.remove(n)
         return pos
 
+    """return 1 if a neighbouring position contains an infected agent, 0 otherwise"""
     def getInfectedNeighbours(self, pos):
         neighbours = self.getNeighbours(pos)
         for neighbour in neighbours:
