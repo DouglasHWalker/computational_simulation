@@ -31,25 +31,28 @@ class Daisy(Agent):
             if r1 < INFECT:
                 self.infected = 1
         elif self.infected == 1:
+            if r1 < KILL:
+                return self.die("disease")
             if r1 < RECOVER: 
                 self.infected = 2
-            if r1 < KILL:
-                self.die()
         elif self.infected == 2:
             if r1 < LOOSE_IMMUNITY:
                 self.infected = 0
-        print(self.infected)
+        # print(self.infected)
         r2 = rd.random()
-        if self.age >= MAX_AGE: return self.die()
+        if self.age >= MAX_AGE: return self.die("age")
         elif r2 < seed_threshold: 
             return self.seed()
         else: return super().step(temp)
 
+    def infect(self):
+        return "infect"
+
     def seed(self):
         return "seed"
 
-    def die(self):
-        return "die"
+    def die(self, cause):
+        return cause
 
     def toString(self):
         return super().toString()

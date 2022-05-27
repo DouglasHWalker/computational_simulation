@@ -23,6 +23,7 @@ class World:
         self.whiteAlbedo = whiteAlbedo
         self.blackAlbedo = blackAlbedo
 
+        self.killed_by_disease = 0
         self.worldGrid = self.createWorldGrid()
         self.populateWorld()
     
@@ -41,8 +42,10 @@ class World:
                         y, x = n.pos
                         copy[y][x].set_agent(Daisy(cell.agent.display, cell.agent.albedo))
 
-                if result == "die":
+                if result == "age" or result == "disease":
                     copy[row][col].set_agent(Empty())
+                    if result == "disease": 
+                        self.killed_by_disease += 1
         self.worldGrid = copy
         return copy
 
@@ -76,15 +79,41 @@ class World:
     of patch-variable will be conserved across the world. (If a patch has fewer than eight neighbors, 
     each neighbor still gets an eighth share; the patch keeps any leftover shares.) """
     def diffuse(self):
+        gridcopy = self.worldGrid
+        neighbourcopy = self.worldGrid
         for row in self.worldGrid:
             for cell in row:
                 neighbours = self.getNeighbours(cell.pos)
-                for n in neighbours:
+
+                # take 1 8th of 50% from each neighbour
+                # get rid of 1 8th of 50% of own temp for each neighbour
+                # oldval = gridcopy[cell.pos[0]][cell.pos[1]].temp
+                # for n in neighbours:
+                #     old_n_val = gridcopy[n.pos[0]][n.pos[1]].temp
+                #     cell.temp += (old_n_val * 0.5) / 8
+                # cell.temp -= (oldval * 0.5)
+                # cell.temp += ((old_n_val * 0.5) / 8) * (8- len(neighbours))
+
+
+                # from the source code, still doesn't work...
+                # newVal = oldVal + amount * (sum / directions - oldVal)
+                # oldval = gridcopy[cell.pos[0]][cell.pos[1]].temp
+                # sum = 0
+                # for n in neighbours:
+                #     sum += n.temp
+                # cell.temp = oldval + (0.5 * (sum / 8 - oldval))
+                # if len(neighbours) < 8:
+                #     cell.temp += (0.5 * (sum / 8 - oldval)) * (8 -len(neighbours))
+
+                while neighbours:
+                    n = rd.choice(neighbours)
                     delta = ((cell.temp * (0.5)))
                     n.temp += delta
                     cell.temp -= delta
+                    neighbours.remove(n)
                 if len(neighbours) < 8:
                     cell.temp += delta * (8 -len(neighbours))
+        # self.worldGrid = gridcopy
 
     def getPopulation(self):
         """ Returns a tuple containing the population of daisies (white and black) """
@@ -106,6 +135,16 @@ class World:
 
     def getLuminosity(self):
         return self.luminosity
+    
+    def getSIR(self):
+        susceptible, infected, recovered = (0,0,0)
+        for row in self.worldGrid:
+            for cell in row:
+                if cell.toString() == '1' or cell.toString() == '2':
+                    if cell.agent.infected == 0: susceptible += 1 
+                    if cell.agent.infected == 1: infected += 1 
+                    if cell.agent.infected == 2: recovered += 1
+        return (susceptible, infected, recovered, self.killed_by_disease)
 
     def getRandomPosition(self):
         x = rd.randint(0, self.patches -1)
