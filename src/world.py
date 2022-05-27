@@ -6,10 +6,14 @@ from src.patch import Patch
 
 """ Class represents the daisyworld holds all of the patches in the world 
 At each tick, 
-    the model is updated based on the temperature of each of the patches and the survivability of the daisies on the patches. 
-    As the model progresses, the survivability of each daisy is checked based on the current conditions of the model.
-    If the patch is empty, and the temperature of the patch is in the spawning range, a new daisy is spawned on the patch. 
-    The colour of the new daisy has the probability of being the same colour as its neighbours.
+    the model is updated based on the temperature of each of the patches 
+    and the survivability of the daisies on the patches. 
+    As the model progresses, the survivability of each daisy is checked 
+    based on the current conditions of the model.
+    If the patch is empty, and the temperature of the patch is in the 
+    spawning range, a new daisy is spawned on the patch. 
+    The colour of the new daisy has the probability of being the same 
+    colour as its neighbours.
 
     percentage_whites, percentage_blacks: the percentage of initial daisies
     patches=28: the size of the world 28x28 default
@@ -18,7 +22,8 @@ At each tick,
     whiteAlbedo=0.75, blackAlbedo=0.25: the amount of temp absorbed by the daisies
 """
 class World:
-    def __init__(self, percentage_whites, percentage_blacks,  patches=28, luminosity=1.0, albedo=0.4, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
+    def __init__(self, percentage_whites, percentage_blacks,  patches=28, 
+                 luminosity=1.0, albedo=0.4, whiteAlbedo=0.75, blackAlbedo=0.25) -> None:
         # board size
         self.patches = patches
         # settings
