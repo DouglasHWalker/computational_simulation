@@ -76,18 +76,40 @@ class World:
     of patch-variable will be conserved across the world. (If a patch has fewer than eight neighbors, 
     each neighbor still gets an eighth share; the patch keeps any leftover shares.) """
     def diffuse(self):
+        gridcopy = self.worldGrid
+        neighbourcopy = self.worldGrid
         for row in self.worldGrid:
             for cell in row:
                 neighbours = self.getNeighbours(cell.pos)
-                while neighbours:
-                    n = rd.choice(neighbours)
-                    delta = ((cell.temp * (0.5))) 
-                    n.temp += delta
-                    cell.temp -= delta
-                    neighbours.remove(n)
-                # cell.temp = cell.temp * 0.5
+
+                # take 1 8th of 50% from each neighbour
+                # get rid of 1 8th of 50% of own temp for each neighbour
+                oldval = gridcopy[cell.pos[0]][cell.pos[1]].temp
+                for n in neighbours:
+                    old_n_val = gridcopy[n.pos[0]][n.pos[1]].temp
+                    cell.temp += (old_n_val * 0.5) / 8
+                cell.temp -= (oldval * 0.5)
+
+
+                # from the source code, still doesn't work...
+                # newVal = oldVal + amount * (sum / directions - oldVal)
+                # oldval = gridcopy[cell.pos[0]][cell.pos[1]].temp
+                # sum = 0
+                # for n in neighbours:
+                #     sum += n.temp
+                # cell.temp = oldval + (0.5 * (sum / 8 - oldval))
+                # if len(neighbours) < 8:
+                #     cell.temp += (0.5 * (sum / 8 - oldval)) * (8 -len(neighbours))
+
+                # while neighbours:
+                #     n = rd.choice(neighbours)
+                #     delta = ((cell.temp * (0.5)))
+                #     n.temp += delta
+                #     cell.temp -= delta
+                #     neighbours.remove(n)
                 # if len(neighbours) < 8:
                 #     cell.temp += delta * (8 -len(neighbours))
+        # self.worldGrid = gridcopy
 
     def getPopulation(self):
         """ Returns a tuple containing the population of daisies (white and black) """

@@ -15,11 +15,11 @@ class Controller:
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(fields)
             while self.current_tick < self.lifespan:
-                self.world.diffuse()
-                self.__tick()
-                self.toString()
                 row = [self.current_tick, self.world.getPopulation()[0], self.world.getPopulation()[1], self.world.getPopulation()[2], self.world.getGlobalTemperature(), self.world.getLuminosity()]
                 csvwriter.writerow(row)
+                self.__tick()
+                self.world.diffuse()
+                self.toString()
 
                 if self.extinct():break
 
