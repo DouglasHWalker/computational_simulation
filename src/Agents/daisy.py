@@ -7,9 +7,9 @@ MAX_AGE = 25 # average human age
 INIT_INFECT = 0.01
 
 # spanish flu
-RECOVER = 0.4 # develop immunity after 4 steps
-INFECT = ((1/8) * 6) # R0 of 6
-KILL = 0.6 # 10% of infected get killed
+RECOVER = 0.25 # develop immunity after 4 steps
+INFECT = ((1/8) * 3) # R0 of 3
+KILL = 0.1 # 10% of infected get killed
 LOOSE_IMMUNITY = 0.01 # once you have it you mostly immune
 
 
