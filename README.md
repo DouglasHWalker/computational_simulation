@@ -1,4 +1,4 @@
-# mcss_asg_2_group_32
+# Computational Simulations
 
 Hi. Welcome to the Daisyworld.
 
